@@ -1,0 +1,21 @@
+# Send prompt
+send_prompt:
+  fields:
+    prompt:
+      required: true
+      example: "How are you today?"
+      default: "Your prompt goes here"
+      selector:
+        text:
+
+    agent_id:
+      required: false
+      example: "ag:xxxxxxxx:xxxxxxxx:xxxxxxxxxx:xxxxxxxx"
+      selector:
+        text:
+
+    identifier:
+      required: false
+      example: "Your identifier (will be returned in event)"
+      selector:
+        text:

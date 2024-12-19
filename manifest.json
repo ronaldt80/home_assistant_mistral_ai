@@ -1,0 +1,11 @@
+{
+  "domain": "mistral_ai_api",
+  "name": "Mistral AI API",
+  "documentation": "https://github.com/BlaXun/home_assistant_mistral_ai",
+  "dependencies": [],
+  "codeowners": ["@yourusername"],
+  "version": "0.1.0",
+  "requirements": [],
+  "config_flow": true,
+  "single_config_entry": true
+}
