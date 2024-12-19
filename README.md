@@ -84,6 +84,6 @@ As you can see the mistral_ai_api.send_prompt takes additional (optional) argume
 This is my first home assistant integration and I have zero experience in developing for home assistant. I am sure things could be done way better... but I have no idea how.
 If anybody wants to help with this or would like to offer some advice I'd be happy to accept it.
 
-<h6>Things to add</h6>
+<h5>Things to add</h5>
 * Allow for selection a specific mistral ai model
 * Lots more... have to read their documentation
