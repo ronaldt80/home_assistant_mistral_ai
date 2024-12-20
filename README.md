@@ -78,11 +78,11 @@ Next, add the following entry to your <b>configuration.yaml</b>
 
 ```yaml
   mistral_ai_api:
-  name: "Mistral AI API"
-  api_key: !secret mistral_token
+    name: "Mistral AI API"
+    api_key: !secret mistral_token
   ```
 
-Once that's done add a entry for <b>mistral_token</b> to your <b>secrets.yaml</b>
+Once that's done add an entry for <b>mistral_token</b> to your <b>secrets.yaml</b>
 The token is the token your received from registering with mistral ai.
 
 Now, restart Home Assistant and you should be good to go.
