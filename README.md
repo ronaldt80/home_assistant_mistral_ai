@@ -7,6 +7,8 @@ This is a custom integration for home assistant which will allow you to send pro
   <li>Let mistral ai decide wether you should open the windows. Send the outside temperature and humidity to mistral ai along with the avarage temperature and humidity of all your rooms.</li>
   <li>Get dynamic push notifications created by the AI instead of the same static sentences you normall define.</li>
   <li>Feed mistral ai with your workout data to get a quick summary</li>
+  <li>Use mistral ai coding model to let it generate jinja + markdown to populate your dashboard</li>
+  <li>Generate template sensor code using mistral coding model</li>
 </lu>
 
 <h2>Example code</h2>
@@ -164,4 +166,4 @@ If anybody wants to help with this or would like to offer some advice I'd be hap
 
 <h5>Things to add</h5>
 * <del>Allow for selection a specific mistral ai model</del> (Done)<br/>
-* Lots more... have to read their documentation
+* Explore if I could get function calling done to let the ai fetch data from HA and to let it execute things in HA
