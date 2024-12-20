@@ -8,10 +8,10 @@ from homeassistant.core import HomeAssistant
 import asyncio
 from homeassistant.config_entries import ConfigEntry
 from .api import send_prompt_command
+from .const import DOMAIN
+from .sensor import MistralAiSensor
 
 _LOGGER = logging.getLogger(__name__)
-
-DOMAIN = "mistral_ai_api"
 
 CONFIG_SCHEMA = vol.Schema({
     DOMAIN: vol.Schema({
@@ -27,18 +27,16 @@ async def async_setup(hass: HomeAssistant, config: dict):
         return True
 
     conf = config[DOMAIN]
-    return await setup_common(hass, conf)
+    
+    sensor = MistralAiSensor(hass, {"state": "idle", "response": "", "prompt": "", "identifier": ""})
+    hass.data[DOMAIN]["sensor"] = sensor
 
-async def async_setup_entry(hass: HomeAssistant, config_entry: ConfigEntry) -> bool:
-    conf = config_entry.data
     return await setup_common(hass, conf)
 
 async def setup_common(hass: HomeAssistant, conf: dict) -> bool:
     api_key = conf[CONF_API_KEY]
 
     async def send_prompt(call):
-
-        _LOGGER.debug(f"send_prompt {call}")
         prompt = call.data.get("prompt")
         agent_id = call.data.get("agent_id")
         identifier = call.data.get("identifier")
@@ -53,3 +51,4 @@ async def setup_common(hass: HomeAssistant, conf: dict) -> bool:
 async def async_unload_entry(hass, entry):
     hass.services.async_remove(DOMAIN, "send_prompt")
     return True
+
