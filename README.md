@@ -152,11 +152,15 @@ As you can see the mistral_ai_api.send_prompt takes additional (optional) argume
 <tr>
 <tr>
 	<td>agent_id</t>
-	<td>(optional) The id of an agent you want to utilize
+	<td><i>optional</i>	The id of an agent you want to utilize
 <tr>
 <tr>
 	<td>identifier</t>
-	<td>(Optional) A custom identifier which will be returned in the event so you know which prompt the answer belonged to</td>
+	<td><i>optional</i>	A custom identifier which will be returned in the event so you know which prompt the answer belonged to</td>
+<tr>
+<tr>
+	<td>timeout</t>
+	<td><i>optional</i>	Timeout in seconds which defines how long home assistant should wait for an answer before terminating the request. Value of 60 seconds seems fine.</td>
 <tr>
 </table>
 
