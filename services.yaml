@@ -8,6 +8,22 @@ send_prompt:
       selector:
         text:
 
+    model:
+      required: false
+      example: "mistral-large-latest"
+      default: "mistral-large-latest"
+      selector:
+        select:
+          options:
+            - mistral-large-latest
+            - ministral-3b-latest
+            - ministral-8b-latest
+            - mistral-small-latest
+            - codestral-latest
+            - mistral-moderation-latest
+            - open-mistral-nemo
+            - open-codestral-mamba
+
     agent_id:
       required: false
       example: "ag:xxxxxxxx:xxxxxxxx:xxxxxxxxxx:xxxxxxxx"
