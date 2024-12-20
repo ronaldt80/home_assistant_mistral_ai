@@ -3,9 +3,10 @@
   "name": "Mistral AI API",
   "documentation": "https://github.com/BlaXun/home_assistant_mistral_ai",
   "dependencies": [],
-  "codeowners": ["@yourusername"],
+  "codeowners": ["@blaxun"],
   "version": "0.2.0",
   "requirements": [],
   "config_flow": true,
-  "single_config_entry": true
+  "single_config_entry": true,
+  "issue_tracker": "https://github.com/BlaXun/home_assistant_mistral_ai/issues"
 }
