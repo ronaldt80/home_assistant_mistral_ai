@@ -41,6 +41,15 @@ You can call the send_prompt-command like this
       prompt: Whats the weather
       identifier: my-question-123
 
+Or like this
+	
+	action: mistral_ai_api.send_prompt
+	    metadata: {}
+	    data:
+	      	prompt: Give me a jinja2 template to show some data in a nice formatted way. Make sure to only return the code as-is so I can use it directly in a markdown. Don't add any explanation, just return the code.
+       		model: codestral-latest
+	      	identifier: my-question-123
+
 
 This will send the prompt to mistral ai.
 Once mistral ai sent back the response the mentioned event will be thrown.
@@ -71,6 +80,10 @@ As you can see the mistral_ai_api.send_prompt takes additional (optional) argume
 	<td>The prompt to send to mistral</td>
 <tr>
 <tr>
+	<td>model</t>
+	<td>The mistral ai model to be used. Not required when using an agent</td>
+<tr>
+<tr>
 	<td>agent_id</t>
 	<td>(optional) The id of an agent you want to utilize
 <tr>
@@ -85,5 +98,5 @@ This is my first home assistant integration and I have zero experience in develo
 If anybody wants to help with this or would like to offer some advice I'd be happy to accept it.
 
 <h5>Things to add</h5>
-* Allow for selection a specific mistral ai model
+* <del>Allow for selection a specific mistral ai model</del> (Done)<br/>
 * Lots more... have to read their documentation
