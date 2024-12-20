@@ -1,8 +1,52 @@
-<h1>Mistral AI Integration in Home Assistant</h1>
+<a id="readme-top"></a>
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>	
+    </li>
+    <li>
+      <a href="#what-is-mistral-ai">What is Mistral AI</a>	
+    </li>
+    <li>
+	<a href="#example-use-cases">Example Use-Cases</a>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li>
+	<a href="#usage">Usage</a>
+    	<ul>
+	  <li><a href="#service">Service</a></li>
+	  <li><a href="#event">Event</a></li>
+	  <li><a href="#sensor-entity">Sensor Entity</a></li>
+	</ul>
+    </li>
+  </ol>
+</details>
 
-This is a custom integration for home assistant which will allow you to send prompts to mistral ai.
 
-<h2>Use-Cases</h2>
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+This is a custom integration for [Home Assistant](https://www.home-assistant.io/) which allows for sending prompts to [Mistral AI](https://mistral.ai/)
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## What is Mistral AI
+Mistral AI is a generative AI created in europe (france). It offers different models of their ai, each specialized for different topics.
+This ai had high scores in several benchmarks, even beating previous versions of Chat GPT.
+Right now using Mistral AI is free.
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+## Example Use-Cases
+
 <lu>
   <li>Let mistral ai decide wether you should open the windows. Send the outside temperature and humidity to mistral ai along with the avarage temperature and humidity of all your rooms.</li>
   <li>Get dynamic push notifications created by the AI instead of the same static sentences you normall define.</li>
@@ -11,118 +55,105 @@ This is a custom integration for home assistant which will allow you to send pro
   <li>Generate template sensor code using mistral coding model</li>
 </lu>
 
-<h2>Example code</h2>
 
-<b>Script to send prompt to mistral</b>
-	
-	action: mistral_ai_api.send_prompt
-	metadata: {}
-	data:
-	  identifier: Rückgabe
-	  model: mistral-large-latest
-	  prompt: >-
-	    I'm thinking bout wether I should ventilate my home. The outside temperature
-	    is     {{state_attr('weather.forecast_home','temperature')}} degree and the
-	    outside humdity is      {{state_attr('weather.forecast_home','humidity')}}%.
-	    The avarage temperature of all my rooms is            
-	    {{states('sensor.durchschn_temperatur_in_der_wohnung')}} degree and the
-	    avarage humidity of all my rooms is         
-	    {{states('sensor.durchschn_feuchtigkeit_in_der_wohnung')}}%. Should I
-	    ventilate? Explain your reasoning.
+<!-- GETTING STARTED -->
+## Getting Started
 
-<b>Automation to react to response event</b>
-
-	alias: "[Mistral AI] React on mistral ai response"
-	description: ""
-	triggers:
-	  - trigger: event
-	    event_type: mistral_ai_response
-	conditions: []
-	actions:
-	  - action: persistent_notification.create
-	    metadata: {}
-	    data:
-	      message: "{{trigger.event.data.response}}"
-	mode: single
-
-<b>AI response</b>
-
-	To determine whether you should ventilate your home, it’s important to consider the effects of temperature and humidity on indoor air quality and comfort. Here’s a breakdown of your situation:
-
-	Outside Conditions:
-	Temperature: 2.3°C
-	Humidity: 89%
-	Inside Conditions:
-	Temperature: 18.5°C
-	Humidity: 57%
-	Key Considerations:
-	Temperature Difference:
-	The outside temperature is significantly lower than the inside temperature. Ventilating by opening windows could lead to a drop in indoor temperature, making the environment colder.
-	Humidity Levels:
-	The outside humidity is much higher than the inside humidity. Introducing this high humidity into your home could increase the indoor humidity levels, which might lead to discomfort and potential issues like condensation and mold growth.
-	Indoor Air Quality:
-	Ventilation helps to reduce indoor pollutants, odors, and carbon dioxide levels, improving overall air quality. However, it should be balanced with maintaining comfortable temperature and humidity levels.
-	Recommendations:
-	Given the significant difference in temperature and humidity, it might not be the best time to ventilate your home by simply opening windows. Here are some alternative suggestions:
-	
-	Mechanical Ventilation:
-	If your home has a mechanical ventilation system (e.g., heat recovery ventilator), use it. These systems can exchange indoor and outdoor air while maintaining temperature and humidity levels.
-	Short Bursts of Ventilation:
-	Open windows for short periods (e.g., 5-10 minutes) to allow for some air exchange without drastically affecting the indoor temperature and humidity.
-	Monitor Indoor Air Quality:
-	Use indoor air quality monitors to check levels of pollutants, carbon dioxide, and humidity. This can help you decide when ventilation is necessary.
-	Use Dehumidifiers:
-	If you decide to ventilate and notice an increase in indoor humidity, consider using a dehumidifier to maintain comfortable levels.
-	Conclusion:
-	Based on the current conditions, it might be better to avoid prolonged ventilation by opening windows. Instead, consider using mechanical ventilation or short bursts of ventilation to maintain indoor air quality without compromising comfort.
-
-<h2>Requirements</h2>
-You will need to have an account with mistral ai (its free) and also need to sign-up for an api-key (also free).
-If you wish to use agents you'll also have to define agents on thei developer portal.
-
-<a href="https://mistral.ai/">Mistral AI<a>
-
-<h3>Installation</h3>
-
-Add the following to your configuration.yaml
-
-    mistral_ai_api:
-      name: "Mistral AI API"
-      api_key: !secret mistral_token
-
-Then add a entry of "mistral_token" to your secrets.yaml. This is where your API-Key goes
+Before you can use the integration check the prerequisites. Once thats done, follow up with the installation
 
 
-<h4>How to use</h4>
-The integration offers two parts
+### Prerequisites
 
-1. A service called mistral_ai_api.send_prompt
-2. A event with the identifier <b>mistral_ai_response</b>
+In order to be able to use this integration you <b>must</b> sign-up with [Mistral AI](https://mistral.ai/). This is currently free!
+Once you got your account you can request an API-Key. 
+If you wish to use agents you can also define those in the developer portal. Each agent has its unique id which you can use in this integration.
 
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+
+## Installation
+
+Download the files from this repository and place the <b>mistral_ai_api</b> directory into your <b>custom_components</b> directory.
+Next, add the following entry to your <b>configuration.yaml</b>
+
+```yaml
+  mistral_ai_api:
+  name: "Mistral AI API"
+  api_key: !secret mistral_token
+  ```
+
+Once that's done add a entry for <b>mistral_token</b> to your <b>secrets.yaml</b>
+The token is the token your received from registering with mistral ai.
+
+Now, restart Home Assistant and you should be good to go.
+
+
+<!-- USAGE EXAMPLES -->
+## Usage
+
+The integration offers three key-parts
+
+<lu>
+	<li>A service called mistral_ai_api.send_prompt</li>
+	<li>An event with the identifier <b>mistral_ai_response</b></li>
+	<li>The sensor.mistral_ai_api-Entity</li>
+</lu>
+
+### Service
 
 You can call the send_prompt-command like this
 
+```yaml
     action: mistral_ai_api.send_prompt
     metadata: {}
     data:
       prompt: Whats the weather
       identifier: my-question-123
+```
 
 Or like this
-	
-	action: mistral_ai_api.send_prompt
-	    metadata: {}
-	    data:
-	      	prompt: Give me a jinja2 template to show some data in a nice formatted way. Make sure to only return the code as-is so I can use it directly in a markdown. Don't add any explanation, just return the code.
-       		model: codestral-latest
-	      	identifier: my-question-123
 
+```yaml
+    action: mistral_ai_api.send_prompt
+      metadata: {}
+        data:
+          prompt: Give me a jinja2 template to show some data in a nice formatted way. Make sure to only return the code as-is so I can use it directly in a markdown. Don't add any explanation, just return the code.
+          model: codestral-latest
+          identifier: my-question-123
+```
 
 This will send the prompt to mistral ai.
-Once mistral ai sent back the response the mentioned event will be thrown.
+Once mistral ai sent back the response the mentioned event will be thrown and the sensor-Entity will get its state and attribute updated.
 
+As you can see the mistral_ai_api.send_prompt takes additional (optional) arguments
+
+<table>
+	<tr>
+		<td><b>prompt</b></t>
+		<td>The prompt to send to mistral</td>
+	<tr>
+	<tr>
+		<td><b>model</b></t>
+		<td>The mistral ai model to be used. Not required when using an agent</td>
+	<tr>
+	<tr>
+		<td><b>agent_id</b></t>
+		<td><i>optional</i>	The id of an agent you want to utilize
+	<tr>
+	<tr>
+		<td><b>identifier</b></t>
+		<td><i>optional</i>	A custom identifier which will be returned in the event so you know which prompt the answer belonged to</td>
+	<tr>
+	<tr>
+		<td><b>timeout</b></t>
+		<td><i>optional</i>	Timeout in seconds which defines how long home assistant should wait for an answer before terminating the request. Value of 60 seconds seems fine.</td>
+	<tr>
+</table>
+
+### Event
 You can react to that in an automation and do whatever you want with the result
 
+```yaml
     alias: "[Mistral AI] React on mistral ai response"
     description: ""
     triggers:
@@ -137,37 +168,28 @@ You can react to that in an automation and do whatever you want with the result
             {{trigger.event.data.identifier}} - {{trigger.event.data.agent_id}} -
             {{trigger.event.data.response}}
     mode: single
+```
 
+### Sensor Entity
 
-As you can see the mistral_ai_api.send_prompt takes additional (optional) arguments
+In addition to the event the integration also ships with a Sensor.
+The id of the sensor is sensor.mistral_ai_api.
+This sensor can have one of two states
 
 <table>
-<tr>
-	<td>prompt</t>
-	<td>The prompt to send to mistral</td>
-<tr>
-<tr>
-	<td>model</t>
-	<td>The mistral ai model to be used. Not required when using an agent</td>
-<tr>
-<tr>
-	<td>agent_id</t>
-	<td><i>optional</i>	The id of an agent you want to utilize
-<tr>
-<tr>
-	<td>identifier</t>
-	<td><i>optional</i>	A custom identifier which will be returned in the event so you know which prompt the answer belonged to</td>
-<tr>
-<tr>
-	<td>timeout</t>
-	<td><i>optional</i>	Timeout in seconds which defines how long home assistant should wait for an answer before terminating the request. Value of 60 seconds seems fine.</td>
-<tr>
+	<tr><td><b>idle</b></td><td>Not doing anything. This is the state it starts with</td></tr>
+	<tr><td><b>processing</b>b></td><td>A prompt was sent to mistral ai. Now waiting for the response</td></tr>	
 </table>
 
-<h5>Disclaimer</h5>
-This is my first home assistant integration and I have zero experience in developing for home assistant. I am sure things could be done way better... but I have no idea how.
-If anybody wants to help with this or would like to offer some advice I'd be happy to accept it.
+Given these two states one could create an automation that reacts to the change of the state from <i>idle</i> to <i>processing</i>.
 
-<h5>Things to add</h5>
-* <del>Allow for selection a specific mistral ai model</del> (Done)<br/>
-* Explore if I could get function calling done to let the ai fetch data from HA and to let it execute things in HA
+Next up there are a couple of attributes for this entity which are as follows
+
+<table>
+	<tr><td><b>last_prompt</b></td><td>The last response that was sent to mistral ai</td></tr>
+	<tr><td><b>last_response</b></td><td>The last response from mistral ai</td></tr>
+	<tr><td><b>identifier</b></td><td>The last identifier belonging to the prompt and response</td></tr>
+	<tr><td><b>timestamp</b></td><td>A timestamp that is refreshed whenever a prompt was sent or a response was received</td></tr>
+</table>
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
