@@ -7,7 +7,74 @@ This is a custom integration for home assistant which will allow you to send pro
   <li>Let mistral ai decide wether you should open the windows. Send the outside temperature and humidity to mistral ai along with the avarage temperature and humidity of all your rooms.</li>
   <li>Get dynamic push notifications created by the AI instead of the same static sentences you normall define.</li>
   <li>Feed mistral ai with your workout data to get a quick summary</li>
+  <li>Use mistral ai coding model to let it generate jinja + markdown to populate your dashboard</li>
+  <li>Generate template sensor code using mistral coding model</li>
 </lu>
+
+<h2>Example code</h2>
+
+<b>Script to send prompt to mistral</b>
+	
+	action: mistral_ai_api.send_prompt
+	metadata: {}
+	data:
+	  identifier: Rückgabe
+	  model: mistral-large-latest
+	  prompt: >-
+	    I'm thinking bout wether I should ventilate my home. The outside temperature
+	    is     {{state_attr('weather.forecast_home','temperature')}} degree and the
+	    outside humdity is      {{state_attr('weather.forecast_home','humidity')}}%.
+	    The avarage temperature of all my rooms is            
+	    {{states('sensor.durchschn_temperatur_in_der_wohnung')}} degree and the
+	    avarage humidity of all my rooms is         
+	    {{states('sensor.durchschn_feuchtigkeit_in_der_wohnung')}}%. Should I
+	    ventilate? Explain your reasoning.
+
+<b>Automation to react to response event</b>
+
+	alias: "[Mistral AI] React on mistral ai response"
+	description: ""
+	triggers:
+	  - trigger: event
+	    event_type: mistral_ai_response
+	conditions: []
+	actions:
+	  - action: persistent_notification.create
+	    metadata: {}
+	    data:
+	      message: "{{trigger.event.data.response}}"
+	mode: single
+
+<b>AI response</b>
+
+	To determine whether you should ventilate your home, it’s important to consider the effects of temperature and humidity on indoor air quality and comfort. Here’s a breakdown of your situation:
+
+	Outside Conditions:
+	Temperature: 2.3°C
+	Humidity: 89%
+	Inside Conditions:
+	Temperature: 18.5°C
+	Humidity: 57%
+	Key Considerations:
+	Temperature Difference:
+	The outside temperature is significantly lower than the inside temperature. Ventilating by opening windows could lead to a drop in indoor temperature, making the environment colder.
+	Humidity Levels:
+	The outside humidity is much higher than the inside humidity. Introducing this high humidity into your home could increase the indoor humidity levels, which might lead to discomfort and potential issues like condensation and mold growth.
+	Indoor Air Quality:
+	Ventilation helps to reduce indoor pollutants, odors, and carbon dioxide levels, improving overall air quality. However, it should be balanced with maintaining comfortable temperature and humidity levels.
+	Recommendations:
+	Given the significant difference in temperature and humidity, it might not be the best time to ventilate your home by simply opening windows. Here are some alternative suggestions:
+	
+	Mechanical Ventilation:
+	If your home has a mechanical ventilation system (e.g., heat recovery ventilator), use it. These systems can exchange indoor and outdoor air while maintaining temperature and humidity levels.
+	Short Bursts of Ventilation:
+	Open windows for short periods (e.g., 5-10 minutes) to allow for some air exchange without drastically affecting the indoor temperature and humidity.
+	Monitor Indoor Air Quality:
+	Use indoor air quality monitors to check levels of pollutants, carbon dioxide, and humidity. This can help you decide when ventilation is necessary.
+	Use Dehumidifiers:
+	If you decide to ventilate and notice an increase in indoor humidity, consider using a dehumidifier to maintain comfortable levels.
+	Conclusion:
+	Based on the current conditions, it might be better to avoid prolonged ventilation by opening windows. Instead, consider using mechanical ventilation or short bursts of ventilation to maintain indoor air quality without compromising comfort.
 
 <h2>Requirements</h2>
 You will need to have an account with mistral ai (its free) and also need to sign-up for an api-key (also free).
@@ -99,4 +166,4 @@ If anybody wants to help with this or would like to offer some advice I'd be hap
 
 <h5>Things to add</h5>
 * <del>Allow for selection a specific mistral ai model</del> (Done)<br/>
-* Lots more... have to read their documentation
+* Explore if I could get function calling done to let the ai fetch data from HA and to let it execute things in HA
