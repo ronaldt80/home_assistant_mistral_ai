@@ -35,3 +35,12 @@ send_prompt:
       example: "Your identifier (will be returned in event)"
       selector:
         text:
+
+    timeout_in_seconds:
+      required: false
+      example: 60
+      default: 60
+      selector:
+        number:
+          min: 10
+          max: 320
