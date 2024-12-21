@@ -1,37 +1,58 @@
 import logging
-import requests
-from datetime import datetime
 import voluptuous as vol
-import homeassistant.helpers.config_validation as cv
-from homeassistant.const import CONF_NAME, CONF_API_KEY
+
+from homeassistant.const import CONF_API_KEY, CONF_NAME
 from homeassistant.core import HomeAssistant
-import asyncio
-from homeassistant.config_entries import ConfigEntry
+import homeassistant.helpers.config_validation as cv
+
 from .api import send_prompt_command
-from .const import DOMAIN
+from .const import (
+    ATTR_IDENTIFIER,
+    ATTR_LAST_PROMPT,
+    ATTR_LAST_RESPONSE,
+    ATTR_TIMESTAMP,
+    DOMAIN,
+)
 from .sensor import MistralAiSensor
 
 _LOGGER = logging.getLogger(__name__)
 
-CONFIG_SCHEMA = vol.Schema({
-    DOMAIN: vol.Schema({
-        vol.Required(CONF_NAME): cv.string,
-        vol.Required(CONF_API_KEY): cv.string
-    }),
-}, extra=vol.ALLOW_EXTRA)
+CONFIG_SCHEMA = vol.Schema(
+    {
+        DOMAIN: vol.Schema(
+            {vol.Required(CONF_NAME): cv.string, vol.Required(CONF_API_KEY): cv.string}
+        ),
+    },
+    extra=vol.ALLOW_EXTRA,
+)
+
 
 async def async_setup(hass: HomeAssistant, config: dict):
     hass.data.setdefault(DOMAIN, {})
+
+    # Exclude attributes from being recorded in history
+    _entity_component_unrecorded_attributes = frozenset(
+        (ATTR_TIMESTAMP, ATTR_LAST_PROMPT, ATTR_LAST_RESPONSE, ATTR_IDENTIFIER)
+    )
+
+    # Initialize MistralAiSensor
+    sensor = MistralAiSensor(
+        hass, {"state": "idle", "response": "", "prompt": "", "identifier": ""}
+    )
+    sensor.async_write_ha_state()
+
+    hass.async_create_task(
+        hass.config_entries.async_forward_entry_setup(config, "sensor")
+    )
+
+    hass.data[DOMAIN]["sensor"] = sensor
 
     if DOMAIN not in config:
         return True
 
     conf = config[DOMAIN]
-    
-    sensor = MistralAiSensor(hass, {"state": "idle", "response": "", "prompt": "", "identifier": ""})
-    hass.data[DOMAIN]["sensor"] = sensor
-
     return await setup_common(hass, conf)
+
 
 async def setup_common(hass: HomeAssistant, conf: dict) -> bool:
     api_key = conf[CONF_API_KEY]
@@ -43,12 +64,14 @@ async def setup_common(hass: HomeAssistant, conf: dict) -> bool:
         model = call.data.get("model")
         timeout_in_seconds = call.data.get("timeout_in_seconds")
 
-        await send_prompt_command(hass, api_key, prompt, agent_id, identifier, model, timeout_in_seconds)
-        
+        await send_prompt_command(
+            hass, api_key, prompt, agent_id, identifier, model, timeout_in_seconds
+        )
+
     hass.services.async_register(DOMAIN, "send_prompt", send_prompt)
     return True
+
 
 async def async_unload_entry(hass, entry):
     hass.services.async_remove(DOMAIN, "send_prompt")
     return True
-
