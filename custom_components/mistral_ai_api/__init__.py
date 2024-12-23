@@ -3,6 +3,9 @@ import voluptuous as vol
 
 from homeassistant.const import CONF_API_KEY, CONF_NAME
 from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
+from homeassistant.helpers.typing import ConfigType
+
 import homeassistant.helpers.config_validation as cv
 
 from .api import send_prompt_command
@@ -25,7 +28,20 @@ CONFIG_SCHEMA = vol.Schema(
     },
     extra=vol.ALLOW_EXTRA,
 )
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+    """Set up the Mistral AI component."""
+    return True
 
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up Mistral AI from a config entry."""
+    hass.data.setdefault(DOMAIN, {})
+    hass.data[DOMAIN][entry.entry_id] = entry.data
+    return True
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload a config entry."""
+    hass.data[DOMAIN].pop(entry.entry_id)
+    return True
 
 async def async_setup(hass: HomeAssistant, config: dict):
     hass.data.setdefault(DOMAIN, {})
@@ -75,3 +91,4 @@ async def setup_common(hass: HomeAssistant, conf: dict) -> bool:
 async def async_unload_entry(hass, entry):
     hass.services.async_remove(DOMAIN, "send_prompt")
     return True
+
