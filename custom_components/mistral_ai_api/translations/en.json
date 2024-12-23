@@ -1,4 +1,14 @@
 {
+    "config": {
+    "step": {
+      "user": {
+        "title": "Connect to Mistral AI",
+        "data": {
+          "api_key": "API Key"
+        }
+      }
+    }
+  },
     "services": {
         "send_prompt": {
             "name": "Send prompt to mistral",
